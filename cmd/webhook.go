@@ -116,20 +116,21 @@ func mutationRequired(ignoredList []string, metadata *metav1.ObjectMeta) bool {
         status := annotations[admissionWebhookAnnotationStatusKey]
 
         // determine whether to perform mutation based on annotation for the target resource
-        //var required bool
-        //if strings.ToLower(status) == "injected" {
-        //        required = false
-        //} else {
-        //        switch strings.ToLower(annotations[admissionWebhookAnnotationInjectKey]) {
-        //        default:
-        //                required = false
-        //       case "y", "yes", "true", "on":
-        //                required = true
-        //        }
-        //}
+        var required bool
+        if strings.ToLower(status) == "injected" {
+                required = false
+        } else {
+                switch strings.ToLower(annotations[admissionWebhookAnnotationInjectKey]) {
+                default:
+                        required = false
+               case "y", "yes", "true", "on":
+                        required = true
+                }
+        }
 
-        //glog.Infof("Mutation policy for %v/%v: status: %q required:%v", metadata.Namespace, metadata.Name, status, required)
+        glog.Infof("Mutation policy for %v/%v: status: %q required:%v", metadata.Namespace, metadata.Name, status, required)
         //return required
+        return true
 }
 
 func addContainer(target, added []corev1.Container, basePath string) (patch []patchOperation) {
